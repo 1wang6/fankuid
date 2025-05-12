@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>意见反馈平台</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            padding: 0;
+            background-color: #f4f4f9;
+        }
+        .container {
+            max-width: 800px;
+            margin: auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        label {
+            display: block;
+            margin-top: 10px;
+            color: #555;
+        }
+        input[type="text"],
+        input[type="email"],
+        select,
+        textarea {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box; /* 确保内边距和边框包含在宽度内 */
+        }
+        button {
+            margin-top: 20px;
+            padding: 10px 15px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .faq-section {
+            margin-top: 30px;
+        }
+        .faq-list {
+            list-style-type: none;
+            padding: 0;
+        }
+        .faq-item {
+            margin-bottom: 10px;
+            padding: 10px;
+            background-color: #e9ecef;
+            border-radius: 4px;
+        }
+        .progress-section {
+            margin-top: 20px;
+        }
+        .progress-status {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #d4edda;
+            border: 1px solid #c3e6cb;
+            border-radius: 4px;
+            color: #155724;
+        }
+        .error-message {
+            color: red;
+            margin-top: 5px;
+        }
+        .language-select {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+        }
+        .language-select label {
+            margin-right: 5px;
+            color: #555;
+            font-size: 14px;
+        }
+        .language-select select {
+            width: auto;
+            padding: 5px;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <!-- 语言切换功能 -->
+    <div class="language-select">
+        <label for="language">语言：</label>
+        <select id="language" name="language">
+            <option value="zh-CN">中文</option>
+            <option value="en-US">英文</option>
+            <option value="ja-JP">日文</option>
+            <option value="ko-KR">韩文</option>
+        </select>
+    </div>
+    
+    <h1>意见反馈平台</h1>
+    
+    <!-- 反馈者基本信息区 -->
+    <label for="name">姓名：</label>
+    <input type="text" id="name" name="name" required>
+    <div id="name-error" class="error-message"></div>
+    
+    <label for="contact">联系方式（手机号码或电子邮箱）：</label>
+    <input type="text" id="contact" name="contact" required>
+    <div id="contact-error" class="error-message"></div>
+    
+    <label for="identity">反馈者身份：</label>
+    <select id="identity" name="identity">
+        <option value="普通使用者">普通使用者</option>
+        <option value="视障群体家属">视障群体家属</option>
+        <option value="专业人士">专业人士（康复师、盲人学校教师等）</option>
+    </select>
+    
+    <!-- 反馈主题与类型选择区 -->
+    <label for="subject">反馈主题：</label>
+    <input type="text" id="subject" name="subject" required>
+    <div id="subject-error" class="error-message"></div>
+    
+    <label for="type">反馈类型：</label>
+    <select id="type" name="type">
+        <option value="功能问题">功能问题</option>
+        <option value="使用体验">使用体验</option>
+        <option value="产品质量">产品质量</option>
+        <option value="新功能建议">新功能建议</option>
+    </select>
+    
+    <!-- 详细反馈内容区 -->
+    <label for="details">详细反馈内容：</label>
+    <textarea id="details" name="details" rows="5" required></textarea>
+    <p style="color: #777;">请尽可能详细描述问题，这有助于我们更快解决您的困扰。</p>
+    <div id="details-error" class="error-message"></div>
+    
+    <!-- 上传附件区 -->
+    <label for="attachment">上传附件：</label>
+    <input type="file" id="attachment" name="attachment" accept=".jpg,.jpeg,.png,.mp4,.pdf">
+    
+    <!-- 提交按钮 -->
+    <button onclick="submitFeedback()">提交反馈</button>
+    
+    <!-- 反馈进度展示区 -->
+    <div class="progress-section">
+        <h2>反馈进度</h2>
+        <div id="progress-status" class="progress-status">尚未提交记录</div>
+    </div>
+    
+    <!-- 常见问题解答（FAQ）板块 -->
+    <div class="faq-section">
+        <h2>常见问题解答</h2>
+        <ul class="faq-list">
+            <li class="faq-item"><strong>如何校准导盲杖的定位功能？</strong><br>请参考用户手册中的校准步骤，或者联系客服获取帮助。</li>
+            <li class="faq-item"><strong>导盲杖充电时间过长怎么办？</strong><br>检查充电线和电源插座是否正常工作，确保电池无损坏。</li>
+        </ul>
+    </div>
+    
+    <!-- 搜索功能 -->
+    <label for="search">搜索反馈：</label>
+    <input type="text" id="search" name="search" placeholder="输入关键词...">
+</div>
+
+<script>
+    function submitFeedback() {
+        let isValid = true;
+
+        // 清除之前的错误信息
+        document.getElementById('name-error').innerText = '';
+        document.getElementById('contact-error').innerText = '';
+        document.getElementById('subject-error').innerText = '';
+        document.getElementById('details-error').innerText = '';
+
+        // 验证姓名
+        const name = document.getElementById('name').value.trim();
+        if (name === '') {
+            document.getElementById('name-error').innerText = '请输入姓名';
+            isValid = false;
+        }
+
+        // 验证联系方式
+        const contact = document.getElementById('contact').value.trim();
+        if (contact === '') {
+            document.getElementById('contact-error').innerText = '请输入联系方式';
+            isValid = false;
+        }
+
+        // 验证反馈主题
+        const subject = document.getElementById('subject').value.trim();
+        if (subject === '') {
+            document.getElementById('subject-error').innerText = '请输入反馈主题';
+            isValid = false;
+        }
+
+        // 验证详细反馈内容
+        const details = document.getElementById('details').value.trim();
+        if (details === '') {
+            document.getElementById('details-error').innerText = '请输入详细反馈内容';
+            isValid = false;
+        }
+
+        if (isValid) {
+            // 这里可以添加提交反馈的逻辑
+            document.getElementById('progress-status').innerText = '提交成功，正在处理中，预计3个工作日内回复';
+        }
+    }
+</script>
+
+</body>
+</html>
+
+
+
